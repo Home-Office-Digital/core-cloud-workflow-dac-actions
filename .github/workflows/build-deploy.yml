@@ -1,0 +1,46 @@
+name: Build and Deploy Eleventy to GitHub Pages
+
+on:
+  workflow_call:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and Pages
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/setup@1.0.0
+        with:
+          node_version: "20"
+
+      - name: Build and Upload Pages artifact
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/build@1.0.0
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/deploy@1.0.0
