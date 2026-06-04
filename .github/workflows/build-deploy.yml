@@ -2,9 +2,22 @@ name: Build and Deploy Eleventy to GitHub Pages
 
 on:
   workflow_call:
-  push:
-    branches:
-      - main
+    inputs:
+      working_directory:
+        description: "Directory to run npm build in (default: repository root)"
+        required: false
+        type: string
+        default: "."
+      node_version:
+        description: "Node version to use for the build (default: 20)"
+        required: false
+        type: string
+        default: "24"
+      path:
+        description: "Path to the built site to upload as a Pages artifact (default: _site)"
+        required: false
+        type: string
+        default: "_site"
 
 permissions:
   contents: read
@@ -25,17 +38,19 @@ jobs:
       - name: Setup Node.js and Pages
         uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/setup@1.0.0
         with:
-          node_version: "20"
-
+          working_directory: ${{ inputs.working_directory }}
+          node_version: ${{ inputs.node_version }}
+        
       - name: Build and Upload Pages artifact
         uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/build@1.0.0
         with:
-          path: _site
+          path: ${{ inputs.path }}
 
   deploy:
     needs: build
+    if: github.ref_name == 'main'
     runs-on: ubuntu-latest
-    
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
