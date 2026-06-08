@@ -1,0 +1,29 @@
+name: Node npm build and upload Pages artifact
+description: "Run npm build on the project after dependencies have been installed."
+
+inputs:
+  working_directory:
+    description: "Directory to run npm build in (default: repository root)"
+    required: false
+    type: string
+    default: "."
+
+  path:
+    description: "Path to the built site to upload as a Pages artifact (default: _site)"
+    required: false
+    type: string
+    default: "_site"
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Setup Node
+      uses: Home-Office-Digital/core-cloud-workflow-node-npm-actions/actions/build@1.3.1
+      with:
+        working_directory: ${{ inputs.working_directory }}
+
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ${{ inputs.path }}
