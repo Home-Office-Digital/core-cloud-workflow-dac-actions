@@ -36,14 +36,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js and Pages
-        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/setup@1.0.0
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/setup@1.0.1
         with:
           working_directory: ${{ inputs.working_directory }}
           node_version: ${{ inputs.node_version }}
         
       - name: Build and Upload Pages artifact
-        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/build@1.0.0
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/build@1.0.1
         with:
+          working_directory: ${{ inputs.working_directory }}
           path: ${{ inputs.path }}
 
   deploy:
@@ -58,4 +59,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/deploy@1.0.0
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/deploy@1.0.1

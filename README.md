@@ -82,7 +82,7 @@ permissions:
 
 jobs:
   build-deploy:
-    uses: Home-Office-Digital/core-cloud-workflow-dac-actions/.github/workflows/build-deploy.yml@1.0.0
+    uses: Home-Office-Digital/core-cloud-workflow-dac-actions/.github/workflows/build-deploy.yml@1.0.1
     with:
       working_directory: "."
       node_version: "24"
@@ -107,16 +107,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js and Pages
-        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/setup@1.0.0
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/setup@1.0.1
         with:
           node_version: "20"
 
       - name: Build and Upload Pages artifact
-        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/build@1.0.0
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/build@1.0.1
         with:
           path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/deploy@1.0.0
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/deploy@1.0.1
 ```
