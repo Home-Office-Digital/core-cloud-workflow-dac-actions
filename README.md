@@ -52,6 +52,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 ```
 
 The deploy job inside this reusable workflow only runs when the ref name is main.
@@ -61,6 +64,22 @@ The deploy job inside this reusable workflow only runs when the ref name is main
 Workflow can be used as
 
 ```yml
+name: build-deploy-pages
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+  pages: write
+
 jobs:
   build-deploy:
     uses: Home-Office-Digital/core-cloud-workflow-dac-actions/.github/workflows/build-deploy.yml@1.0.0
