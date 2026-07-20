@@ -28,6 +28,7 @@ export default function eleventyConfigSetup(eleventyConfig) {
     const pathPrefix = '/';
 
     eleventyConfig.addPassthroughCopy({ "assets/logos": "assets/logos"});
+    eleventyConfig.addPassthroughCopy({ "assets/images": "assets/images"});
 
     const xgovukPluginOptions = {
         // Home Office branding
