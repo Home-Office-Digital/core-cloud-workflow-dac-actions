@@ -22,7 +22,7 @@ runs:
       uses: actions/checkout@v7
       with:
         repository: Home-Office-Digital/core-cloud-workflow-dac-actions
-        ref: feature/CCL-10369
+        ref: ${{ github.workflow_sha }}
         path: _workflow-actions
 
     - name: Copy dac configs
