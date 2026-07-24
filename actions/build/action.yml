@@ -14,12 +14,41 @@ inputs:
     type: string
     default: "_site"
 
+  repo_name:
+    description: "Repository name to use in generated DAC links and GitHub Pages paths"
+    required: false
+    type: string
+    default: ""
+
+  repo_owner:
+    description: "Repository owner to use in generated DAC links and GitHub Pages URLs"
+    required: false
+    type: string
+    default: ""
+
 runs:
   using: "composite"
 
   steps:
-    - name: Setup Node
+    - name: Checkout repository
+      uses: actions/checkout@v7
+      with:
+        repository: Home-Office-Digital/core-cloud-workflow-dac-actions
+        ref: ${{ github.workflow_sha }}
+        path: _workflow-actions
+
+    - name: Copy dac configs
+      shell: bash
+      env:
+        WORKING_DIRECTORY: ${{ inputs.working_directory }}
+      run: |
+        cp -r -- _workflow-actions/dac-configs/ "$WORKING_DIRECTORY"
+
+    - name: Build Node project
       uses: Home-Office-Digital/core-cloud-workflow-node-npm-actions/actions/build@1.3.1
+      env:
+        REPO_NAME: ${{ inputs.repo_name }}
+        REPO_OWNER: ${{ inputs.repo_owner }}
       with:
         working_directory: ${{ inputs.working_directory }}
 
