@@ -18,6 +18,16 @@ on:
         required: false
         type: string
         default: "_site"
+      repo_name:
+        description: "Repository name to use in generated DAC links and GitHub Pages paths"
+        required: false
+        type: string
+        default: ""
+      repo_owner:
+        description: "Repository owner to use in generated DAC links and GitHub Pages URLs"
+        required: false
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -40,12 +50,14 @@ jobs:
         with:
           working_directory: ${{ inputs.working_directory }}
           node_version: ${{ inputs.node_version }}
-        
+
       - name: Build and Upload Pages artifact
         uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/build@1.1.0
         with:
           working_directory: ${{ inputs.working_directory }}
           path: ${{ inputs.path }}
+          repo_name: ${{ inputs.repo_name }}
+          repo_owner: ${{ inputs.repo_owner }}
 
   deploy:
     needs: build

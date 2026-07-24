@@ -2,8 +2,9 @@ import { govukEleventyPlugin } from "@x-govuk/govuk-eleventy-plugin";
 
 export default function eleventyConfigSetup(eleventyConfig) {
 
-    // The name of the repo as it appears on GitHub
-    const repoName = '';
+    const [githubRepositoryOwner, githubRepositoryName] = (process.env.GITHUB_REPOSITORY || '').split('/');
+    const repoOwner = process.env.REPO_OWNER || githubRepositoryOwner || 'Home-Office-Digital';
+    const repoName = process.env.REPO_NAME || githubRepositoryName || process.env.npm_package_name || '';
 
     /** This should match the public site URL when the docs are deployed.
       * For example when using a GitHub action to deploy to GitHub pages:
@@ -25,7 +26,9 @@ export default function eleventyConfigSetup(eleventyConfig) {
       *    ? `/${repoName}/`
       *    : '/';
       */
-    const pathPrefix = '/';
+    const pathPrefix = process.env.GITHUB_ACTIONS && repoName
+        ? `/${repoName}/`
+        : '/';
 
     eleventyConfig.addPassthroughCopy({ "assets/logos": "assets/logos"});
     eleventyConfig.addPassthroughCopy({ "assets/images": "assets/images"});
@@ -63,7 +66,7 @@ export default function eleventyConfigSetup(eleventyConfig) {
         },
         footer: {
             copyright: {
-                html: '© <a class="govuk-footer__link" href="https://github.com/UKHomeOffice/'+ repoName +'/blob/main/LICENSE.md">Crown Copyright (Home Office)</a>'
+                html: `© <a class="govuk-footer__link" href="https://github.com/${repoOwner}/${repoName}/blob/main/LICENSE.md">Crown Copyright (Home Office)</a>`
             },
         },
         pathPrefix,

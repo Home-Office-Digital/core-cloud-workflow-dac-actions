@@ -36,6 +36,18 @@ The reusable workflow supports the following inputs:
   - Required: false
   - Default: _site
   - Description: Path to the built site to upload as a Pages artifact
+- repo_name
+  - Type: string
+  - Required: false
+  - Default: automatically derived from GitHub Actions
+  - Description: Repository name to use in generated DAC links and GitHub Pages paths
+- repo_owner
+  - Type: string
+  - Required: false
+  - Default: automatically derived from GitHub Actions
+  - Description: Repository owner to use in generated DAC links and GitHub Pages URLs
+
+The DAC Eleventy config derives repository details from `GITHUB_REPOSITORY` by default. Set `repo_name` or `repo_owner` only when the generated links or GitHub Pages paths need to point somewhere other than the calling repository.
 
 ## Turn On GitHub Pages (Deploy From main)
 
