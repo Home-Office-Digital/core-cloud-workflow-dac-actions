@@ -52,7 +52,7 @@ jobs:
           node_version: ${{ inputs.node_version }}
 
       - name: Build and Upload Pages artifact
-        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/build@1.1.1
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/build@feature/CCL-10369
         with:
           working_directory: ${{ inputs.working_directory }}
           path: ${{ inputs.path }}
