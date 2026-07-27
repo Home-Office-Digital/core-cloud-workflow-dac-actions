@@ -86,6 +86,12 @@ The DAC Eleventy preset defines:
 3. Home Office favicon, mask icon, apple touch icon, and Open Graph image.
 4. Footer copyright text linked to the repository license path.
 
+### Images
+
+If your site includes custom images, add them to `assets/images` in your repository.
+
+The DAC configuration passes through `assets/images`, so those images are included in the built site output.
+
 ### Repository Defaults For Links And Paths
 
 Repository metadata is resolved in this order:
