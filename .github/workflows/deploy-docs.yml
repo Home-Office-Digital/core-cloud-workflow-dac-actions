@@ -20,4 +20,4 @@ jobs:
     with:
       working_directory: "docs/"
       node_version: "24"
-      path: "_site"
+      path: "docs/_site"
