@@ -1,14 +1,16 @@
 # core-cloud-workflow-dac-actions
 
-This repository contains actions for a full static site build and deployment workflow to GitHub Pages.
+This repository contains a reusable workflow and supporting actions for a full static site build and deployment workflow to GitHub Pages.
 
-- Setup Node and Pages - to set up Node.js and configure GitHub Pages
-- Build and upload Pages artifact - to build the site and upload the artifact
-- Deploy to GitHub Pages - to deploy the uploaded Pages artifact
+The primary entry point is the reusable workflow:
 
-There is also one workflow that combines several actions into a self contained workflow.
+- build-deploy - sets up, builds, uploads, and deploys to GitHub Pages
 
-- build-deploy - will set up, build, upload, and deploy to GitHub Pages
+The workflow is backed by three composite actions:
+
+- Setup Node and Pages - sets up Node.js and configures GitHub Pages
+- Build and upload Pages artifact - builds the site and uploads the artifact
+- Deploy to GitHub Pages - deploys the uploaded Pages artifact
 
 ## Pre-requisites
 
@@ -94,7 +96,7 @@ permissions:
 
 jobs:
   build-deploy:
-    uses: Home-Office-Digital/core-cloud-workflow-dac-actions/.github/workflows/build-deploy.yml@1.0.1
+    uses: Home-Office-Digital/core-cloud-workflow-dac-actions/.github/workflows/build-deploy.yml@1.1.1
     with:
       working_directory: "."
       node_version: "24"
@@ -119,16 +121,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js and Pages
-        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/setup@1.0.1
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/setup@1.1.1
         with:
           node_version: "20"
 
       - name: Build and Upload Pages artifact
-        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/build@1.0.1
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/build@1.1.1
         with:
           path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/deploy@1.0.1
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/deploy@1.1.1
 ```

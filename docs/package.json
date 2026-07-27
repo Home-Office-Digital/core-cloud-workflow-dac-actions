@@ -1,0 +1,26 @@
+{
+  "name": "core-cloud-workflow-dac-actions",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions#readme",
+  "bugs": {
+    "url": "https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "eleventy",
+    "dev": "eleventy --serve"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.1.5",
+    "@x-govuk/govuk-eleventy-plugin": "^9.0.1"
+  }
+}
