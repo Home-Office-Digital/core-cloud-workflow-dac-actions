@@ -5,6 +5,7 @@ export default function eleventyConfigSetup(eleventyConfig) {
     const [githubRepositoryOwner, githubRepositoryName] = (process.env.GITHUB_REPOSITORY || '').split('/');
     const repoOwner = process.env.REPO_OWNER || githubRepositoryOwner || 'Home-Office-Digital';
     const repoName = process.env.REPO_NAME || githubRepositoryName || process.env.npm_package_name || '';
+    const productName = process.env.PRODUCT_NAME || repoName || 'Documentation';
 
     /** This should match the public site URL when the docs are deployed.
       * For example when using a GitHub action to deploy to GitHub pages:
@@ -54,7 +55,7 @@ export default function eleventyConfigSetup(eleventyConfig) {
                     '  <span class="govuk-header__logotype-text">Home Office</span>' +
                     '</span>'
             },
-            productName: 'Core Cloud SonarQube',
+            productName,
             organisationName: 'Home Office',
             search: {
                 label: 'Search site',

@@ -26,6 +26,12 @@ inputs:
     type: string
     default: ""
 
+  product_name:
+    description: "Product name to display in the site header"
+    required: false
+    type: string
+    default: ""
+
 runs:
   using: "composite"
 
@@ -42,6 +48,7 @@ runs:
       env:
         REPO_NAME: ${{ inputs.repo_name }}
         REPO_OWNER: ${{ inputs.repo_owner }}
+        PRODUCT_NAME: ${{ inputs.product_name }}
       with:
         working_directory: ${{ inputs.working_directory }}
 

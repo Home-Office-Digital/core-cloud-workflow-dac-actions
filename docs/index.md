@@ -53,6 +53,7 @@ The build action:
 1. Copies preset DAC configuration files into the caller repository working directory.
 2. Runs the project build using the shared Node/npm build action.
 3. Uploads the generated site directory as a GitHub Pages artifact (default `_site`).
+4. Supports optional `product_name` input to override the header product title.
 
 Action file: `actions/build/action.yml`
 
@@ -100,5 +101,11 @@ Repository metadata is resolved in this order:
 2. `GITHUB_REPOSITORY` from GitHub Actions
 3. Fallback defaults (`Home-Office-Digital` for owner, package name or empty for name)
 
-In most cases, consumers do not need to set `repo_owner` or `repo_name` manually.
+Product name is resolved in this order:
+
+1. Explicit workflow input (`product_name`)
+2. Derived repository name from workflow metadata
+3. Fallback default (`Documentation`)
+
+In most cases, consumers do not need to set `repo_owner`, `repo_name`, or `product_name` manually.
 

@@ -48,8 +48,13 @@ The reusable workflow supports the following inputs:
   - Required: false
   - Default: automatically derived from GitHub Actions
   - Description: Repository owner to use in generated DAC links and GitHub Pages URLs
+- product_name
+  - Type: string
+  - Required: false
+  - Default: derived from repository metadata when available, otherwise Documentation
+  - Description: Product name shown in the site header
 
-The DAC Eleventy config derives repository details from `GITHUB_REPOSITORY` by default. Set `repo_name` or `repo_owner` only when the generated links or GitHub Pages paths need to point somewhere other than the calling repository.
+The DAC Eleventy config derives repository details from `GITHUB_REPOSITORY` by default and derives `product_name` from repository metadata when not explicitly set, falling back to `Documentation`. Set `repo_name`, `repo_owner`, or `product_name` only when the generated links, header title, or GitHub Pages paths need to point somewhere other than the calling repository defaults.
 
 ## Before You Can Deploy
 
@@ -105,6 +110,7 @@ jobs:
       working_directory: "."
       node_version: "24"
       path: "_site"
+      product_name: "My Product Docs"
 ```
 
 The actions can be used in a similar manner as well
@@ -133,6 +139,7 @@ jobs:
         uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/build@1.1.1
         with:
           path: _site
+          product_name: "My Product Docs"
 
       - name: Deploy to GitHub Pages
         id: deployment

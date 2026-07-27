@@ -52,7 +52,7 @@ export default function eleventyConfigSetup(eleventyConfig) {
           '  <span class="govuk-header__logotype-text">Home Office</span>' +
           "</span>",
       },
-      productName: "Core Cloud SonarQube",
+      productName: "Core Cloud DAC Actions",
       organisationName: "Home Office",
       search: {
         label: "Search site",
