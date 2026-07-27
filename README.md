@@ -51,6 +51,10 @@ The reusable workflow supports the following inputs:
 
 The DAC Eleventy config derives repository details from `GITHUB_REPOSITORY` by default. Set `repo_name` or `repo_owner` only when the generated links or GitHub Pages paths need to point somewhere other than the calling repository.
 
+## Before You Can Deploy
+
+Make sure GitHub Pages is configured to deploy from GitHub Actions.
+
 ## Turn On GitHub Pages (Deploy From main)
 
 1. Open your repository on GitHub.

@@ -17,6 +17,15 @@ The reusable workflow is backed by three composite actions:
 2. Build and upload Pages artifact
 3. Deploy to GitHub Pages
 
+## Before You Can Deploy
+
+Make sure GitHub Pages is configured to deploy from GitHub Actions:
+
+1. Open your repository on GitHub.
+2. Go to Settings > Pages.
+3. Under Build and deployment, set Source to GitHub Actions.
+4. Ensure your workflow runs on main for production deployments.
+
 ## How The Workflow And Actions Work
 
 ### 1. Reusable Workflow
