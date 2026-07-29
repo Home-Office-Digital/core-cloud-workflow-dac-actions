@@ -30,29 +30,46 @@ Make sure GitHub Pages is configured to deploy from GitHub Actions:
 ### Prompt
 
 You can use the following prompt to create the necessary documentation files.
+Please fill in the place holders for [product name], [description], and [repository name]!
 
 ```txt
-You are making the documentation scaffold.
+Please create a scaffolded "docs as code" setup for my product repository.
 
-The documentation should follow the requirements:
-The output must strictly follow the structure, headings, formatting conventions, and style guide defined 
-in
-https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/feature/CCL-10577/docs/product.md
-You should also copy the product.md into the docs folder.
-You should create the necessary files mentioned in product.md
+The product is called [product name], and its main focus is [description]
+
+Use the following file as the template and style guide: https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/feature/CCL-10577/docs/product.md
+
+The generated documentation must strictly follow the same:
+- structure
+- headings
+- formatting conventions
+- tone and style
+- content patterns
+
+Please copy the template product.md into the docs folder of this product repository, adapting it for [repository name] where appropriate.
+
+Also create any additional files or folders that are referenced or required by product.md.
+
+Finally, add the docs-as-code GitHub Actions workflow from: https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/feature/CCL-10577/.github/workflows/deploy-docs.yml
+
+Place it in this product repository at: .github/workflows/deploy-docs.yml
+
+Do not deploy anything yet and if you think additional files are needed, ask before creating them.
+
+Create scaffold documentation only: use placeholders and checklists, not invented operational details.
+
+Adapt the product name and short description, but leave unknown fields blank.
+
+Keep the documentation consistent with the template style: concise headings, short checklist items, simple links, and no explanatory prose unless the template uses it.
+
+For each linked page, create a matching placeholder page with front matter, a top-level heading, a `Description:` line, and relevant checklist sections based on the link purpose.
+
+Do not add content that has not been provided.
+
+When complete, output only a concise summary of files created and the Git commands needed to commit and push the changes.
 ```
 
 Review the output to see if it worked as expected.
-
-### Copy the workflow
-
-Copy the workflow located at:
-https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/main/.github/workflows/deploy-docs.yml
-
-### Create PR
-
-Create the PR, review, approve, and merge it in. The documentation should be deployed to GitHub Pages.
-
 
 ## How The Workflow And Actions Work
 

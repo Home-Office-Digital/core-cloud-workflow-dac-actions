@@ -32,7 +32,7 @@ Senior Responsible Owner:
 
 - [ ] Document the backup process of key data, config responsibility of the product team.
 
-[Link to runbooks](./runbooks.md)
+[Link to backups](./backups.md)
 
 ## Disaster Recovery
 
