@@ -71,6 +71,12 @@ When complete, output only a concise summary of files created and the Git comman
 
 Review the output to see if it worked as expected.
 
+An example video of using the prompt
+<video controls width="100%" preload="metadata">
+	<source src="./assets/images/prompt-guidance.mp4" type="video/mp4" />
+	Your browser does not support the video tag.
+</video>
+
 ## How The Workflow And Actions Work
 
 ### 1. Reusable Workflow

@@ -63,7 +63,7 @@ export default function eleventyConfigSetup(eleventyConfig) {
     footer: {
       copyright: {
         html:
-          '© <a class="govuk-footer__link" href="https://github.com/UKHomeOffice/' +
+          '© <a class="govuk-footer__link" href="https://github.com/Home-Office-Digital/' +
           repoName +
           '/blob/main/LICENSE.md">Crown Copyright (Home Office)</a>',
       },
