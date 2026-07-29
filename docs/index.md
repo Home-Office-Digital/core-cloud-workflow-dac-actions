@@ -42,6 +42,18 @@ You should also copy the product.md into the docs folder.
 You should create the necessary files mentioned in product.md
 ```
 
+Review the output to see if it worked as expected.
+
+## Copy the workflow
+
+Copy the workflow located at:
+https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/main/.github/workflows/deploy-docs.yml
+
+## Create PR
+
+Create the PR, review, approve, and merge it in. The documentation should be deployed to GitHub Pages.
+
+
 ## How The Workflow And Actions Work
 
 ### 1. Reusable Workflow
