@@ -27,7 +27,7 @@ Make sure GitHub Pages is configured to deploy from GitHub Actions:
 4. Ensure your workflow runs on main for production deployments.
 
 
-## Prompt
+### Prompt
 
 You can use the following prompt to create the necessary documentation files.
 
@@ -37,19 +37,19 @@ You are making the documentation scaffold.
 The documentation should follow the requirements:
 The output must strictly follow the structure, headings, formatting conventions, and style guide defined 
 in
-https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/feature/CCL-10577/product.md
+https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/feature/CCL-10577/docs/product.md
 You should also copy the product.md into the docs folder.
 You should create the necessary files mentioned in product.md
 ```
 
 Review the output to see if it worked as expected.
 
-## Copy the workflow
+### Copy the workflow
 
 Copy the workflow located at:
 https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/main/.github/workflows/deploy-docs.yml
 
-## Create PR
+### Create PR
 
 Create the PR, review, approve, and merge it in. The documentation should be deployed to GitHub Pages.
 
