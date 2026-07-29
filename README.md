@@ -14,8 +14,6 @@ The workflow is backed by three composite actions:
 
 ## Pre-requisites
 
-- Valid Node.js project with npm scripts
-- Valid build output directory, defaulting to _site
 - GitHub Pages enabled in the repository
 - Workflow permissions including pages: write and id-token: write
 

@@ -26,6 +26,22 @@ Make sure GitHub Pages is configured to deploy from GitHub Actions:
 3. Under Build and deployment, set Source to GitHub Actions.
 4. Ensure your workflow runs on main for production deployments.
 
+
+## Prompt
+
+You can use the following prompt to create the necessary documentation files.
+
+```txt
+You are making the documentation scaffold.
+
+The documentation should follow the requirements:
+The output must strictly follow the structure, headings, formatting conventions, and style guide defined 
+in
+https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/feature/CCL-10577/product.md
+You should also copy the product.md into the docs folder.
+You should create the necessary files mentioned in product.md
+```
+
 ## How The Workflow And Actions Work
 
 ### 1. Reusable Workflow
