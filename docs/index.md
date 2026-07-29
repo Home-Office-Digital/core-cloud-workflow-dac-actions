@@ -37,7 +37,7 @@ Please create a scaffolded "docs as code" setup for my product repository.
 
 The product is called [product name], and its main focus is [description]
 
-Use the following file as the template and style guide: https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/feature/CCL-10577/docs/product.md
+Use the following file as the template and style guide: https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/main/docs/product.md
 
 The generated documentation must strictly follow the same:
 - structure
@@ -50,7 +50,7 @@ Please copy the template product.md into the docs folder of this product reposit
 
 Also create any additional files or folders that are referenced or required by product.md.
 
-Finally, add the docs-as-code GitHub Actions workflow from: https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/feature/CCL-10577/.github/workflows/deploy-docs.yml
+Finally, add the docs-as-code GitHub Actions workflow from: https://github.com/Home-Office-Digital/core-cloud-workflow-dac-actions/blob/main.github/workflows/deploy-docs.yml
 
 Place it in this product repository at: .github/workflows/deploy-docs.yml
 
