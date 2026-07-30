@@ -136,4 +136,3 @@ Product name is resolved in this order:
 3. Fallback default (`Documentation`)
 
 In most cases, consumers do not need to set `repo_owner`, `repo_name`, or `product_name` manually.
-
