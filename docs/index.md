@@ -46,7 +46,14 @@ The generated documentation must strictly follow the same:
 - tone and style
 - content patterns
 
-The documentation will be integrated into Eleventy. They should be formatted as such. This includes no double heading.
+Eleventy heading rule:
+- The layout renders H1 from front matter title.
+- Do not add a markdown H1 (# ...) in any page body.
+- Keep front matter with title for every page.
+- Start page body with:
+    Description:
+    then H2 sections only (## ...), checklist bullets, and links.
+- Never include both front matter title and a markdown H1 on the same page.
 
 Please copy the template product.md into the docs folder of this product repository, adapting it for [repository name] where appropriate.
 
