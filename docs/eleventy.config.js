@@ -52,7 +52,7 @@ export default function eleventyConfigSetup(eleventyConfig) {
           '  <span class="govuk-header__logotype-text">Home Office</span>' +
           "</span>",
       },
-      productName: "Core Cloud SonarQube",
+      productName: "Core Cloud DAC Actions",
       organisationName: "Home Office",
       search: {
         label: "Search site",
@@ -63,7 +63,7 @@ export default function eleventyConfigSetup(eleventyConfig) {
     footer: {
       copyright: {
         html:
-          '© <a class="govuk-footer__link" href="https://github.com/UKHomeOffice/' +
+          '© <a class="govuk-footer__link" href="https://github.com/Home-Office-Digital/' +
           repoName +
           '/blob/main/LICENSE.md">Crown Copyright (Home Office)</a>',
       },
