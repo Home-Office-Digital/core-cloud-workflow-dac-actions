@@ -3,7 +3,6 @@ layout: sub-navigation
 title: Product Documentation
 order: 2
 ---
-# Product Documentation
 
 Description:
 Team:

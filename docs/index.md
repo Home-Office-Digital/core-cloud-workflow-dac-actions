@@ -27,7 +27,7 @@ Make sure GitHub Pages is configured to deploy from GitHub Actions:
 4. Ensure your workflow runs on main for production deployments.
 
 
-### Prompt
+### Prompt - Initial Setup
 
 You can use the following prompt to create the necessary documentation files.
 Please fill in the place holders for [product name], [description], and [repository name]!
@@ -45,6 +45,8 @@ The generated documentation must strictly follow the same:
 - formatting conventions
 - tone and style
 - content patterns
+
+The documentation will be integrated into Eleventy. They should be formatted as such. This includes no double heading.
 
 Please copy the template product.md into the docs folder of this product repository, adapting it for [repository name] where appropriate.
 
@@ -76,6 +78,79 @@ An example video of using the prompt
 	<source src="./assets/images/prompt-guidance.mp4" type="video/mp4" />
 	Your browser does not support the video tag.
 </video>
+
+
+## Prompt - Transferring content from confluence to markdown
+
+Please fill in the place holders for [product name], and [section]!
+
+```txt
+Please migrate content from confluence on [product name] [section] into the [section].md file
+You may:
+
+Reorganise migrated content into clearer Markdown sections and subsections.
+Convert flattened Confluence panels, page properties, option blocks, and macro output into Markdown tables, lists, blockquotes, or fenced code blocks.
+Fix awkward converted headings such as "Example structure:" by turning them into appropriate Markdown headings or labels.
+Split large code/configuration macros into smaller labelled code blocks where this improves readability.
+Preserve all original wording, values, commands, URLs, examples, diagrams, warnings, and technical details.
+Add review comments where source content appears inconsistent, duplicated, incomplete, or cannot be translated cleanly.
+
+
+You must not:
+
+Invent, infer, summarise, or add new technical content.
+Correct source technical values unless explicitly marked as a review comment.
+Remove source content because it looks messy.
+Rewrite content for style beyond Markdown formatting and structure.
+
+Issue:
+• If unable to translate a confluence macro into markdown, then please leave a comment pointing back to the its location in confluence with a brief description of what it was meant to show and a tag for relevant team to review
+• If content is unclear or appears wrong in Confluence, preserve it and add:
+• <!-- REVIEW: @Core-Cloud-Architecture - Brief reason and source Confluence URL -->
+
+Confluence Access:
+
+Use the following Confluence Personal Access Token for authentication which is located in .env: CONFLUENCE_PAT
+Use the following Confluence Url and Space which is located in .env: CONFLUENCE_URL
+
+Output Requirements:
+
+A summary of what was pulled and created 
+Any missed or Marco/giffy content skipped
+```
+
+## Prompt - Review and QA
+
+Please fill in the place holders for [product name], and [section]!
+
+```txt
+QA and traceability requirement:
+
+After migration and Markdown restyling, perform a QA pass against the original [product name] [section] Confluence source pages.
+
+For each migrated Confluence page:
+
+Cross-reference the generated Markdown section against the original Confluence page.
+Confirm all source headings, tables, commands, code blocks, URLs, diagrams, warnings, notes, examples, and technical values are present.
+Confirm restyling did not mutate technical meaning, names, IDs, URLs, commands, configuration values, ports, environment names, permissions, costs, status values, or option outcomes.
+Confirm skipped or partially translated Confluence macros are explicitly represented by either:
+a preserved rendered image,
+a Markdown placeholder,
+or a `<!-- REVIEW: @Core-Cloud-Architecture ... -->` comment with the Confluence source URL and what was skipped.
+
+Confirm no skipped macro content was silently dropped.
+Confirm no new technical content, inferred recommendations, assumptions, or rewritten guidance was introduced.
+
+Create a final QA summary that includes:
+• Source pages checked.
+• Markdown sections checked.
+• Any mutations found and fixed.
+• Any skipped macro/Gliffy/image/Jira/panel/expand/details content and how it is represented.
+• Any remaining review comments requiring team follow-up.
+• Confirmation that the Confluence PAT/token was not written into the Markdown.
+•
+If any mismatch or mutation is found, fix it before reporting completion.
+```
 
 ## How The Workflow And Actions Work
 
