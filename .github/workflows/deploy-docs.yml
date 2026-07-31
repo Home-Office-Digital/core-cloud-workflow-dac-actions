@@ -21,4 +21,4 @@ jobs:
       working_directory: "docs/"
       node_version: "24"
       path: "docs/_site"
-      product_name: "Core Cloud DAC Actions"
+      product_name: "Core Cloud Docs as Code Actions"
