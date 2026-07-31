@@ -5,7 +5,6 @@ order: 4
 ---
 
 ```txt
-
 Please migrate content from confluence on [product name] [section] into the [section].md file
 You may:
 
