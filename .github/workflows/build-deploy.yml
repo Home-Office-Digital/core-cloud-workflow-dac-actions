@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js and Pages
-        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/setup@1.1.2
+        uses: Home-Office-Digital/core-cloud-workflow-dac-actions/actions/setup@fix/CCL-10577-npm
         with:
           working_directory: ${{ inputs.working_directory }}
           node_version: ${{ inputs.node_version }}
