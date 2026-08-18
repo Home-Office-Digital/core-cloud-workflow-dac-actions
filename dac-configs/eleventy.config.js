@@ -1,4 +1,40 @@
 import { govukEleventyPlugin } from "@x-govuk/govuk-eleventy-plugin";
+import { sortCollection, smart } from "@x-govuk/govuk-eleventy-plugin/filters";
+
+// Override the default plugins behaviour when showing sub pages in the nav bar
+function itemsFromNavigationFixed(eleventyNavigation, pageUrl = false, sort = false) {
+    const navigationItems = [];
+    const navigationData = sortCollection(eleventyNavigation, sort);
+
+    navigationData.forEach((item) => {
+        const isCurrentPage = pageUrl && item.url === pageUrl;
+        const isChildPage = pageUrl && item.children?.some((child) => child.url === pageUrl);
+        const isCurrentSection = isCurrentPage || isChildPage || (pageUrl && pageUrl.startsWith(item.url));
+
+        const navigationItem = {
+            current: isCurrentPage,
+            parent: isCurrentSection,
+            href: item.url,
+            text: smart(item.title),
+            theme: item.data?.theme,
+            children: item.children
+                ? sortCollection(item.children, sort).map((child) => ({
+                    current: pageUrl && child.url === pageUrl,
+                    href: child.url,
+                    text: smart(child.title)
+                }))
+                : false
+        };
+
+        if (!isCurrentPage) {
+            navigationItem.href = item.url;
+        }
+
+        navigationItems.push(navigationItem);
+    });
+
+    return navigationItems;
+}
 
 export default function eleventyConfigSetup(eleventyConfig) {
 
@@ -73,6 +109,10 @@ export default function eleventyConfigSetup(eleventyConfig) {
     }
 
     eleventyConfig.addPlugin(govukEleventyPlugin, xgovukPluginOptions);
+
+    eleventyConfig.addPlugin((cfg) => {
+        cfg.addFilter('itemsFromNavigation', itemsFromNavigationFixed);
+    });
 
     return {
         pathPrefix,
