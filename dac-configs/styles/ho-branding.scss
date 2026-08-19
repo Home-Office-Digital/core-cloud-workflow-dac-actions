@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+}
+
+.govuk-header {
+  background-color: var(--govuk-body-background-colour, #fff);
+
+  .govuk-header__container {
+    border: none;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .govuk-header__homepage-link, .govuk-header__homepage-link:visited {
+    color: var(--govuk-text-colour);
+  }
+
+  .govuk-header__logo img {
+    vertical-align: bottom;
+  }
+
+  .app-search {
+    @media (max-width: 62.25em) {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .app-search__input {
+      border: 1px var(--govuk-border-colour) solid;
+    }
+  }
+}
+
+.govuk-footer {
+  border: none;
+  padding-top: 0;
+
+  .govuk-width-container {
+    border-top: 10px solid var(--govuk-border-colour);
+    padding-top: 45px;
+  }
+}
+
+// Update contrast to WCAG AA for code blocks
+.app-code__string,
+.app-code__doctag {
+  color: #d13118;
+}
+
+.app-code__comment,
+.app-code__quote {
+  color: #696e73;
+}
+
+.app-code__type,
+.app-code__class .app-code__title {
+  color: #6669a4;
+}
+
+.x-govuk-related-navigation .govuk-link[aria-current] {
+  font-weight: bold;
+}
+
+// Allows feedback banner to have correct bottom margin.
+.x-govuk-masthead {
+  margin-top: 0;
+}
+
+.govuk-breadcrumbs__link {
+  display: inline-block;
+  min-height: 24px;
+}
+
+.x-govuk-sub-navigation__section-item {
+  background: none;
+}
