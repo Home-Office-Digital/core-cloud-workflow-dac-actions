@@ -1,0 +1,18 @@
+// Use GOV.UK Frontend
+$_font-family: roboto, system-ui, sans-serif;
+@use "pkg:govuk-frontend/dist/govuk" with (
+  $govuk-font-family: $_font-family,
+  $govuk-functional-colours: (
+    brand: #8f23b3,
+    text: #0b0c0c,
+    body-background: #f5f5f5,
+    template-background: #fff,
+    surface-background: #f5f5f5,
+    border: #cbcbcb,
+  ),
+);
+
+// Use GOV.UK Eleventy Plugin components
+@use "pkg:@x-govuk/govuk-eleventy-plugin";
+
+@use "ho-branding";
