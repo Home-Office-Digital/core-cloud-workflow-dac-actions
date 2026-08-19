@@ -1,0 +1,168 @@
+// Use GOV.UK Frontend
+$_font-family: roboto, system-ui, sans-serif;
+@use "pkg:govuk-frontend/dist/govuk" with (
+  $govuk-font-family: $_font-family,
+  $govuk-page-width: 1100px, // to match HO Design System
+  $govuk-functional-colours: (
+    brand: #8f23b3,
+  ),
+);
+
+// Use GOV.UK Eleventy Plugin components
+@use "pkg:@x-govuk/govuk-eleventy-plugin";
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+}
+
+html.govuk-template {
+  background-color: #fff;
+}
+
+body, .govuk-template__body {
+  background-color: #f5f5f5;
+  color: #0b0c0c;
+}
+
+.govuk-header {
+  background-color: #fff;
+  color: #0b0c0c;
+
+  .govuk-header__container {
+    border: none;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .govuk-header__homepage-link {
+    background-color: #fff;
+    color: #0b0c0c;
+  }
+
+  .govuk-header__homepage-link, .govuk-header__homepage-link:visited {
+    color: #0b0c0c;
+  }
+
+  .govuk-header__logo img {
+    vertical-align: bottom;
+  }
+
+  .app-search {
+    @media (max-width: 62.25em) {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .app-search__input {
+      border: 1px #cbcbcb solid;
+    }
+  }
+}
+
+.govuk-footer {
+  background-color: #fff;
+  color: #0b0c0c;
+  border: none;
+  padding-top: 0;
+
+  .govuk-width-container {
+    border-top: 10px solid #cbcbcb;
+    padding-top: 45px;
+  }
+}
+
+// Update contrast to WCAG AA for code blocks
+.app-code__string,
+.app-code__doctag {
+  color: #d13118;
+}
+
+.app-code__comment,
+.app-code__quote {
+  color: #696e73;
+}
+
+.app-code__type,
+.app-code__class .app-code__title {
+  color: #6669a4;
+}
+
+.x-govuk-related-navigation .govuk-link[aria-current] {
+  font-weight: bold;
+}
+
+// Allows feedback banner to have correct bottom margin.
+.x-govuk-masthead {
+  margin-top: 0;
+}
+
+.govuk-header label.govuk-visually-hidden {
+  color: black;
+}
+
+.govuk-breadcrumbs__link {
+  display: inline-block;
+  min-height: 24px;
+}
+
+.x-govuk-sub-navigation__section-item {
+  background: none;
+}
+
+// Expandable navigation control
+.x-govuk-sub-navigation__section-item--has-children {
+  position: relative;
+}
+
+.x-govuk-sub-navigation__section-item--has-children > .x-govuk-sub-navigation__link {
+  padding-left: 35px;
+}
+
+.x-govuk-sub-navigation__toggle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #8f23b3;
+  cursor: pointer;
+}
+
+.x-govuk-sub-navigation__toggle::before {
+  content: "\25B8";
+  display: inline-block;
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+.x-govuk-sub-navigation__toggle[aria-expanded="true"]::before {
+  content: "\25BE";
+}
+
+.x-govuk-sub-navigation__toggle:focus-visible {
+  outline: 3px solid #ffdd00;
+  outline-offset: 0;
+}
+
+// Third-level nesting indentation
+.x-govuk-sub-navigation__section--nested .x-govuk-sub-navigation__section--nested {
+  padding-left: 15px;
+}
+
+// Remove the default dash marker before nested navigation items
+.x-govuk-sub-navigation__section--nested .x-govuk-sub-navigation__section-item::before {
+  content: none;
+}
+
+// Cap the line length of body prose for readability.
+// WCAG AAA says no more than 80 char per line; this is close enough
+p.govuk-body, .govuk-list li {
+  max-width: 80ch;
+}
