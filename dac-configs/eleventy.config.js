@@ -1,5 +1,6 @@
 import { govukEleventyPlugin } from "@x-govuk/govuk-eleventy-plugin";
 import { sortCollection, smart } from "@x-govuk/govuk-eleventy-plugin/filters";
+import beautify from "js-beautify";
 
 // Override the default plugins behaviour when showing sub pages in the nav bar
 function itemsFromNavigationFixed(eleventyNavigation, pageUrl = false, sort = false) {
@@ -113,6 +114,18 @@ export default function eleventyConfigSetup(eleventyConfig) {
     eleventyConfig.addPlugin((cfg) => {
         cfg.addFilter('itemsFromNavigation', itemsFromNavigationFixed);
     });
+
+    // Prettify the HTML output (e.g. make the indentation consistent)
+    // This adds time to the build so let's only do it during a GitHub Action
+    // to avoid slowing down a dev's rebuild
+    if (process.env.CI) {
+        eleventyConfig.addTransform('prettify-html', function (content) {
+            if (this.page.outputPath?.endsWith('.html')) {
+                return beautify.html(content, { indent_size: 2 });
+            }
+            return content;
+        });
+    }
 
     return {
         pathPrefix,
