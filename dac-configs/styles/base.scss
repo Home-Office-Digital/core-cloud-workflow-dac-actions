@@ -111,3 +111,27 @@ body, .govuk-template__body {
 .x-govuk-sub-navigation__section-item {
   background: none;
 }
+
+// Visual indicator for expandable navigation items
+.x-govuk-sub-navigation__section-item--has-children > .x-govuk-sub-navigation__link::before {
+  content: "\25B8"; // ▸ right-pointing triangle
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 1.1em;
+  line-height: 1;
+  color: #8f23b3;
+}
+
+.x-govuk-sub-navigation__section-item--has-children.x-govuk-sub-navigation__section-item--current > .x-govuk-sub-navigation__link::before {
+  content: "\25BE"; // ▾ down-pointing triangle
+}
+
+// Third-level nesting indentation
+.x-govuk-sub-navigation__section--nested .x-govuk-sub-navigation__section--nested {
+  padding-left: 15px;
+}
+
+// Remove the default dash marker before nested navigation items
+.x-govuk-sub-navigation__section--nested .x-govuk-sub-navigation__section-item::before {
+  content: none;
+}
