@@ -1,0 +1,76 @@
+{% extends "layouts/base.njk" %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    classes: "govuk-!-display-none-print",
+    items: breadcrumbItems
+  }) if showBreadcrumbs }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter-from-desktop">
+      {% set navItems = collections.navigation | eleventyNavigation(sectionKey or options.homeKey) | itemsFromNavigation(page.url, true) %}
+      <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
+        <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Pages in this section</h2>
+        <ul class="x-govuk-sub-navigation__section">
+        {% for item in navItems %}
+          {% if item %}
+          <li class="x-govuk-sub-navigation__section-item{% if item.parent or item.current %} x-govuk-sub-navigation__section-item--current{% endif %}{% if item.hasChildren %} x-govuk-sub-navigation__section-item--has-children{% endif %}">
+            <a class="x-govuk-sub-navigation__link" href="{{ item.href }}"{% if item.current %} aria-current="true"{% endif %}>{{ item.text }}</a>
+            {% if item.parent and item.children | length > 0 %}
+            <ul class="x-govuk-sub-navigation__section x-govuk-sub-navigation__section--nested">
+            {% for child in item.children %}
+              <li class="x-govuk-sub-navigation__section-item{% if child.parent or child.current %} x-govuk-sub-navigation__section-item--current{% endif %}{% if child.hasChildren %} x-govuk-sub-navigation__section-item--has-children{% endif %}">
+                <a class="x-govuk-sub-navigation__link" href="{{ child.href }}"{% if child.current %} aria-current="true"{% endif %}>
+                  {{- child.text -}}
+                </a>
+                {% if (child.parent or child.current) and child.children | length > 0 %}
+                <ul class="x-govuk-sub-navigation__section x-govuk-sub-navigation__section--nested">
+                {% for grandchild in child.children %}
+                  <li class="x-govuk-sub-navigation__section-item{% if grandchild.current %} x-govuk-sub-navigation__section-item--current{% endif %}">
+                    <a class="x-govuk-sub-navigation__link" href="{{ grandchild.href }}"{% if grandchild.current %} aria-current="true"{% endif %}>
+                      {{- grandchild.text -}}
+                    </a>
+                  </li>
+                {% endfor %}
+                </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+          </li>
+          {% endif %}
+        {% endfor %}
+        </ul>
+      </nav>
+    </div>
+    <div class="govuk-grid-column-three-quarters-from-desktop">
+      {{ appDocumentHeader({
+        caption: caption,
+        title: title,
+        description: description
+      }) }}
+
+      {{ appProseScope(content) if content }}
+
+      {% if showPagination %}
+        {% set previous = collections.navigation | eleventyNavigation(sectionKey or options.homeKey) | getPreviousNavigationItem(page.url) %}
+        {% set next = collections.navigation | eleventyNavigation(sectionKey or options.homeKey) | getNextNavigationItem(page.url) %}
+        {{ govukPagination({
+          previous: {
+            labelText: previous.title,
+            href: previous.url
+          } if previous,
+          next: {
+            labelText: next.title,
+            href: next.url
+          } if next
+        }) }}
+      {% endif %}
+
+      {% include "layouts/shared/related.njk" %}
+    </div>
+  </div>
+{% endblock %}

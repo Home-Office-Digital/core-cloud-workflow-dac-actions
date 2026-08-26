@@ -2,6 +2,8 @@ import { govukEleventyPlugin } from "@x-govuk/govuk-eleventy-plugin";
 import { sortCollection, smart } from "@x-govuk/govuk-eleventy-plugin/filters";
 
 // Override the default plugins behaviour when showing sub pages in the nav bar
+// Supports 3-level nesting (parent > child > grandchild)
+// Adds hasChildren flag for CSS indicators on collapsed items
 function itemsFromNavigationFixed(eleventyNavigation, pageUrl = false, sort = false) {
     const navigationItems = [];
     const navigationData = sortCollection(eleventyNavigation, sort);
@@ -9,20 +11,39 @@ function itemsFromNavigationFixed(eleventyNavigation, pageUrl = false, sort = fa
     navigationData.forEach((item) => {
         const isCurrentPage = pageUrl && item.url === pageUrl;
         const isChildPage = pageUrl && item.children?.some((child) => child.url === pageUrl);
-        const isCurrentSection = isCurrentPage || isChildPage || (pageUrl && pageUrl.startsWith(item.url));
+        const isGrandchildPage = pageUrl && item.children?.some((child) =>
+            child.children?.some((grandchild) => grandchild.url === pageUrl)
+        );
+        const isCurrentSection = isCurrentPage || isChildPage || isGrandchildPage ||
+            (pageUrl && pageUrl.startsWith(item.url));
 
         const navigationItem = {
             current: isCurrentPage,
             parent: isCurrentSection,
+            hasChildren: item.children && item.children.length > 0,
             href: item.url,
             text: smart(item.title),
             theme: item.data?.theme,
             children: item.children
-                ? sortCollection(item.children, sort).map((child) => ({
-                    current: pageUrl && child.url === pageUrl,
-                    href: child.url,
-                    text: smart(child.title)
-                }))
+                ? sortCollection(item.children, sort).map((child) => {
+                    const isChildCurrent = pageUrl && child.url === pageUrl;
+                    const isChildParent = child.children?.some((gc) => gc.url === pageUrl) ||
+                        (pageUrl && pageUrl.startsWith(child.url));
+                    return {
+                        current: isChildCurrent,
+                        parent: isChildParent || isChildCurrent,
+                        hasChildren: child.children && child.children.length > 0,
+                        href: child.url,
+                        text: smart(child.title),
+                        children: child.children
+                            ? sortCollection(child.children, sort).map((grandchild) => ({
+                                current: pageUrl && grandchild.url === pageUrl,
+                                href: grandchild.url,
+                                text: smart(grandchild.title)
+                            }))
+                            : false
+                    };
+                })
                 : false
         };
 
@@ -122,6 +143,8 @@ export default function eleventyConfigSetup(eleventyConfig) {
         dir: {
             // The folder where all your content will live:
             input: './',
+            includes: '_includes',
+            layouts: '_includes/layouts',
         }
     }
 }
