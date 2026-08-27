@@ -114,7 +114,7 @@ body, .govuk-template__body {
 
 // Visual indicator for expandable navigation items
 .x-govuk-sub-navigation__section-item--has-children > .x-govuk-sub-navigation__link::before {
-  content: "\25B8"; // ▸ right-pointing triangle
+  content: "\25B8";
   display: inline-block;
   margin-right: 6px;
   font-size: 1.1em;
@@ -123,7 +123,7 @@ body, .govuk-template__body {
 }
 
 .x-govuk-sub-navigation__section-item--has-children.x-govuk-sub-navigation__section-item--current > .x-govuk-sub-navigation__link::before {
-  content: "\25BE"; // ▾ down-pointing triangle
+  content: "\25BE";
 }
 
 // Third-level nesting indentation
