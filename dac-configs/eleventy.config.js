@@ -144,7 +144,6 @@ export default function eleventyConfigSetup(eleventyConfig) {
             // The folder where all your content will live:
             input: './',
             includes: '_includes',
-            layouts: '_includes/layouts',
         }
     }
 }
