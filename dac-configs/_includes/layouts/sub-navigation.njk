@@ -18,15 +18,22 @@
           {% if item %}
           <li class="x-govuk-sub-navigation__section-item{% if item.parent or item.current %} x-govuk-sub-navigation__section-item--current{% endif %}{% if item.hasChildren %} x-govuk-sub-navigation__section-item--has-children{% endif %}">
             <a class="x-govuk-sub-navigation__link" href="{{ item.href }}"{% if item.current %} aria-current="true"{% endif %}>{{ item.text }}</a>
-            {% if item.parent and item.children | length > 0 %}
-            <ul class="x-govuk-sub-navigation__section x-govuk-sub-navigation__section--nested">
+            {% if item.hasChildren %}
+            <button class="x-govuk-sub-navigation__toggle" type="button" aria-expanded="{{ 'true' if item.parent else 'false' }}" aria-controls="sub-navigation-item-{{ loop.index }}" data-sub-navigation-toggle>
+              <span class="govuk-visually-hidden">{{ 'Hide' if item.parent else 'Show' }} {{ item.text }} pages</span>
+            </button>
+            <ul class="x-govuk-sub-navigation__section x-govuk-sub-navigation__section--nested" id="sub-navigation-item-{{ loop.index }}"{% if not item.parent %} hidden{% endif %}>
+            {% set itemIndex = loop.index %}
             {% for child in item.children %}
               <li class="x-govuk-sub-navigation__section-item{% if child.parent or child.current %} x-govuk-sub-navigation__section-item--current{% endif %}{% if child.hasChildren %} x-govuk-sub-navigation__section-item--has-children{% endif %}">
                 <a class="x-govuk-sub-navigation__link" href="{{ child.href }}"{% if child.current %} aria-current="true"{% endif %}>
                   {{- child.text -}}
                 </a>
-                {% if (child.parent or child.current) and child.children | length > 0 %}
-                <ul class="x-govuk-sub-navigation__section x-govuk-sub-navigation__section--nested">
+                {% if child.hasChildren %}
+                <button class="x-govuk-sub-navigation__toggle" type="button" aria-expanded="{{ 'true' if child.parent else 'false' }}" aria-controls="sub-navigation-item-{{ itemIndex }}-{{ loop.index }}" data-sub-navigation-toggle>
+                  <span class="govuk-visually-hidden">{{ 'Hide' if child.parent else 'Show' }} {{ child.text }} pages</span>
+                </button>
+                <ul class="x-govuk-sub-navigation__section x-govuk-sub-navigation__section--nested" id="sub-navigation-item-{{ itemIndex }}-{{ loop.index }}"{% if not child.parent %} hidden{% endif %}>
                 {% for grandchild in child.children %}
                   <li class="x-govuk-sub-navigation__section-item{% if grandchild.current %} x-govuk-sub-navigation__section-item--current{% endif %}">
                     <a class="x-govuk-sub-navigation__link" href="{{ grandchild.href }}"{% if grandchild.current %} aria-current="true"{% endif %}>
@@ -45,6 +52,17 @@
         {% endfor %}
         </ul>
       </nav>
+      <script>
+        document.querySelectorAll('[data-sub-navigation-toggle]').forEach((toggle) => {
+          toggle.addEventListener('click', () => {
+            const expanded = toggle.getAttribute('aria-expanded') === 'true';
+            const controlledNavigation = document.getElementById(toggle.getAttribute('aria-controls'));
+            toggle.setAttribute('aria-expanded', String(!expanded));
+            toggle.querySelector('.govuk-visually-hidden').textContent = `${expanded ? 'Show' : 'Hide'} ${toggle.closest('.x-govuk-sub-navigation__section-item').querySelector('.x-govuk-sub-navigation__link').textContent.trim()} pages`;
+            controlledNavigation.hidden = expanded;
+          });
+        });
+      </script>
     </div>
     <div class="govuk-grid-column-three-quarters-from-desktop">
       {{ appDocumentHeader({

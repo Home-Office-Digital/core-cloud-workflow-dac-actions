@@ -4,6 +4,10 @@ import { sortCollection, smart } from "@x-govuk/govuk-eleventy-plugin/filters";
 // Override the default plugins behaviour when showing sub pages in the nav bar
 // Supports 3-level nesting (parent > child > grandchild)
 // Adds hasChildren flag for CSS indicators on collapsed items
+function isCurrentOrDescendantPage(pageUrl, navigationUrl) {
+    return pageUrl === navigationUrl || pageUrl?.startsWith(`${navigationUrl}/`);
+}
+
 function itemsFromNavigationFixed(eleventyNavigation, pageUrl = false, sort = false) {
     const navigationItems = [];
     const navigationData = sortCollection(eleventyNavigation, sort);
@@ -15,7 +19,7 @@ function itemsFromNavigationFixed(eleventyNavigation, pageUrl = false, sort = fa
             child.children?.some((grandchild) => grandchild.url === pageUrl)
         );
         const isCurrentSection = isCurrentPage || isChildPage || isGrandchildPage ||
-            (pageUrl && pageUrl.startsWith(item.url));
+            isCurrentOrDescendantPage(pageUrl, item.url);
 
         const navigationItem = {
             current: isCurrentPage,
@@ -28,7 +32,7 @@ function itemsFromNavigationFixed(eleventyNavigation, pageUrl = false, sort = fa
                 ? sortCollection(item.children, sort).map((child) => {
                     const isChildCurrent = pageUrl && child.url === pageUrl;
                     const isChildParent = child.children?.some((gc) => gc.url === pageUrl) ||
-                        (pageUrl && pageUrl.startsWith(child.url));
+                        isCurrentOrDescendantPage(pageUrl, child.url);
                     return {
                         current: isChildCurrent,
                         parent: isChildParent || isChildCurrent,
@@ -89,6 +93,12 @@ export default function eleventyConfigSetup(eleventyConfig) {
     eleventyConfig.addPassthroughCopy({ "assets/logos": "assets/logos"});
     eleventyConfig.addPassthroughCopy({ "assets/images": "assets/images"});
 
+    // Set dir config BEFORE adding the plugin so getLayoutTemplates can detect user layout overrides
+    eleventyConfig.dir = {
+        input: './',
+        includes: '_includes',
+    };
+
     const xgovukPluginOptions = {
         // Home Office branding
         stylesheets: ['/styles/base.css'],
@@ -140,10 +150,6 @@ export default function eleventyConfigSetup(eleventyConfig) {
         dataTemplateEngine: 'njk',
         htmlTemplateEngine: 'njk',
         markdownTemplateEngine: 'njk',
-        dir: {
-            // The folder where all your content will live:
-            input: './',
-            includes: '_includes',
-        }
+        dir: eleventyConfig.dir,
     }
 }
