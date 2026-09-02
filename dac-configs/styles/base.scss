@@ -118,13 +118,13 @@ body, .govuk-template__body {
 }
 
 .x-govuk-sub-navigation__section-item--has-children > .x-govuk-sub-navigation__link {
-  padding-right: 35px;
+  padding-left: 35px;
 }
 
 .x-govuk-sub-navigation__toggle {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
   width: 30px;
   height: 30px;
   padding: 0;
