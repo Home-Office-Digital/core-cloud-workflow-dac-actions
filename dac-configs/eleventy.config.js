@@ -5,7 +5,7 @@ import { sortCollection, smart } from "@x-govuk/govuk-eleventy-plugin/filters";
 // Supports 3-level nesting (parent > child > grandchild)
 // Adds hasChildren flag for CSS indicators on collapsed items
 function isCurrentOrDescendantPage(pageUrl, navigationUrl) {
-    return pageUrl === navigationUrl || pageUrl?.startsWith(`${navigationUrl}/`);
+    return pageUrl === navigationUrl || (pageUrl && pageUrl.startsWith(`${navigationUrl}/`));
 }
 
 function itemsFromNavigationFixed(eleventyNavigation, pageUrl = false, sort = false) {
