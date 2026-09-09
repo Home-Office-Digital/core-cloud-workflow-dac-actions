@@ -2,6 +2,7 @@
 $_font-family: roboto, system-ui, sans-serif;
 @use "pkg:govuk-frontend/dist/govuk" with (
   $govuk-font-family: $_font-family,
+  $govuk-page-width: 1100px, // to match HO Design System
   $govuk-functional-colours: (
     brand: #8f23b3,
   ),
@@ -158,4 +159,11 @@ body, .govuk-template__body {
 // Remove the default dash marker before nested navigation items
 .x-govuk-sub-navigation__section--nested .x-govuk-sub-navigation__section-item::before {
   content: none;
+}
+
+
+// Cap the line length of body prose for readability.
+// WCAG AAA says no more than 80 char per line; this is close enough
+ p.govuk-body, .govuk-list li {
+  max-width: 80ch;
 }
