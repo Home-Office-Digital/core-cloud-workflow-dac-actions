@@ -161,9 +161,8 @@ body, .govuk-template__body {
   content: none;
 }
 
-
 // Cap the line length of body prose for readability.
 // WCAG AAA says no more than 80 char per line; this is close enough
- p.govuk-body, .govuk-list li {
+p.govuk-body, .govuk-list li {
   max-width: 80ch;
 }
