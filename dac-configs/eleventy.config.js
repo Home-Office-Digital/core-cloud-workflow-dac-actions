@@ -1,6 +1,5 @@
 import { govukEleventyPlugin } from "@x-govuk/govuk-eleventy-plugin";
 import { sortCollection, smart } from "@x-govuk/govuk-eleventy-plugin/filters";
-import EleventyNavigation from "@11ty/eleventy-navigation";
 
 // Override the default plugins behaviour when showing sub pages in the nav bar
 // Supports 3-level nesting (parent > child > grandchild)
@@ -144,21 +143,6 @@ export default function eleventyConfigSetup(eleventyConfig) {
     }
 
     eleventyConfig.addPlugin(govukEleventyPlugin, xgovukPluginOptions);
-
-    // get navbar contents from top level of site's navigation tree
-    eleventyConfig.addGlobalData('eleventyComputed.options.serviceNavigation', () => (data) => {
-        const topLevel = EleventyNavigation.navigation.find(data.collections.navigation, data.options.homeKey);
-        if (topLevel.length === 0) {
-            return;
-        }
-        return {
-            ...data.options.serviceNavigation,
-            navigation: topLevel.map((item) => ({
-                href: item.url,
-                text: item.text || item.title
-            }))
-        };
-    });
 
     eleventyConfig.addPlugin((cfg) => {
         cfg.addFilter('itemsFromNavigation', itemsFromNavigationFixed);
