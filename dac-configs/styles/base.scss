@@ -123,3 +123,10 @@ body, .govuk-template__body {
 p.govuk-body, .govuk-list li {
   max-width: 80ch;
 }
+
+// Box around block code samples, so command/code examples render inside a
+// bordered box (matching how the previous Just-the-Docs product sites did).
+.app-code--block {
+  border: 1px solid #b1b4b6; // govuk mid-grey
+  border-radius: 4px;
+}
