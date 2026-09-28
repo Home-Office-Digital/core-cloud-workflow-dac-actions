@@ -95,6 +95,7 @@ export default function eleventyConfigSetup(eleventyConfig) {
 
     eleventyConfig.addPassthroughCopy({ "assets/logos": "assets/logos"});
     eleventyConfig.addPassthroughCopy({ "assets/images": "assets/images"});
+    eleventyConfig.addPassthroughCopy({ "assets/scripts": "assets/scripts"});
 
     // Set dir config BEFORE adding the plugin so getLayoutTemplates can detect user layout overrides
     eleventyConfig.dir = {
@@ -105,6 +106,9 @@ export default function eleventyConfigSetup(eleventyConfig) {
     const xgovukPluginOptions = {
         // Home Office branding
         stylesheets: ['/styles/base.css'],
+        // Keep the plugin's default JS and add the Mermaid renderer so
+        // ```mermaid fenced blocks render as diagrams.
+        scripts: ['/assets/application.js', '/assets/scripts/mermaid-init.js'],
         templates: {
             searchIndex: {
                 permalink: '/search.json'
