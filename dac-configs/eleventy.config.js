@@ -1,3 +1,9 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import commonJs from "@rollup/plugin-commonjs";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
+import { rollup } from "rollup";
 import { govukEleventyPlugin } from "@x-govuk/govuk-eleventy-plugin";
 import { sortCollection, smart } from "@x-govuk/govuk-eleventy-plugin/filters";
 
@@ -96,8 +102,10 @@ export default function eleventyConfigSetup(eleventyConfig) {
     const xgovukPluginOptions = {
         // Home Office branding
         stylesheets: ['/styles/base.css'],
-        // Keep the plugin's default JS and add the Mermaid renderer so
-        // ```mermaid fenced blocks render as diagrams.
+        // Load the plugin's own application.js (defines the <app-search> search
+        // component) AND the Mermaid renderer. NOTE: setting `scripts` disables
+        // the plugin's built-in application.js generation, so we regenerate it
+        // ourselves in the eleventy.after hook below (see generateApplicationJs).
         scripts: ['/assets/application.js', '/assets/scripts/mermaid-init.js'],
         templates: {
             searchIndex: {
@@ -140,6 +148,29 @@ export default function eleventyConfigSetup(eleventyConfig) {
 
     eleventyConfig.addPlugin((cfg) => {
         cfg.addFilter('itemsFromNavigation', itemsFromNavigationFixed);
+    });
+
+    // Because we set `scripts` above (to add the Mermaid renderer), the plugin
+    // skips generating its own application.js — the file that registers the
+    // <app-search> search component. Regenerate it here so search still works.
+    eleventyConfig.on('eleventy.after', async ({ dir }) => {
+        const outputDir = (dir && dir.output) || '_site';
+        const pluginSrc = path.join(
+            'node_modules', '@x-govuk', 'govuk-eleventy-plugin', 'src', 'application.js'
+        );
+        try {
+            const bundle = await rollup({
+                input: pluginSrc,
+                context: 'window',
+                plugins: [nodeResolve(), commonJs(), terser({ format: { comments: false } })],
+            });
+            const { output } = await bundle.generate({ format: 'es' });
+            await bundle.close();
+            await fs.mkdir(path.join(outputDir, 'assets'), { recursive: true });
+            await fs.writeFile(path.join(outputDir, 'assets', 'application.js'), output[0].code);
+        } catch (error) {
+            console.error('Failed to generate application.js:', error);
+        }
     });
 
     return {
