@@ -26,16 +26,28 @@ function collectMermaidBlocks() {
   return blocks;
 }
 
-async function run() {
-  const blocks = collectMermaidBlocks();
-  if (blocks.length === 0) return;
+// Wait for the DOM to be ready (this module may load before the body is parsed).
+function domReady() {
+  if (document.readyState !== "loading") {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => {
+    document.addEventListener("DOMContentLoaded", () => resolve(), { once: true });
+  });
+}
 
-  blocks.forEach(({ el, text }) => {
+// Top-level await: run directly at module scope rather than wrapping the logic
+// in an async function and calling it (satisfies sonar rule S7785).
+await domReady();
+
+const blocks = collectMermaidBlocks();
+if (blocks.length > 0) {
+  for (const { el, text } of blocks) {
     const div = document.createElement("div");
     div.className = "mermaid";
     div.textContent = text;
     el.replaceWith(div);
-  });
+  }
 
   try {
     const { default: mermaid } = await import(MERMAID_CDN);
@@ -45,10 +57,4 @@ async function run() {
     // If the CDN is unavailable, leave the diagram source visible as text.
     console.error("Mermaid failed to load; showing diagram source instead.", err);
   }
-}
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", run);
-} else {
-  run();
 }
