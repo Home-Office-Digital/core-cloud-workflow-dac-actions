@@ -154,7 +154,7 @@ export default function eleventyConfigSetup(eleventyConfig) {
     // skips generating its own application.js — the file that registers the
     // <app-search> search component. Regenerate it here so search still works.
     eleventyConfig.on('eleventy.after', async ({ dir }) => {
-        const outputDir = (dir && dir.output) || '_site';
+        const outputDir = dir?.output || '_site';
         const pluginSrc = path.join(
             'node_modules', '@x-govuk', 'govuk-eleventy-plugin', 'src', 'application.js'
         );
