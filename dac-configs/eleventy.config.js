@@ -1,9 +1,18 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import commonJs from "@rollup/plugin-commonjs";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
+import { rollup } from "rollup";
 import { govukEleventyPlugin } from "@x-govuk/govuk-eleventy-plugin";
 import { sortCollection, smart } from "@x-govuk/govuk-eleventy-plugin/filters";
 
-// Override the default plugins behaviour when showing sub pages in the nav bar
-// Supports 3-level nesting (parent > child > grandchild)
-// Adds hasChildren flag for CSS indicators on collapsed items
+// Override the default plugin behaviour when showing sub pages in the nav bar.
+// Recursive version: supports arbitrary nesting depth (section > child >
+// grandchild > great-grandchild > ...) so the sidebar renders the full tree.
+// Each item carries `current` (is this the page), `parent` (is the current page
+// this item or a descendant — i.e. expand its children) and `hasChildren`.
+// Paired with the recursing sub-navigation macro in _includes.
 function isCurrentOrDescendantPage(pageUrl, navigationUrl) {
     if (typeof pageUrl !== "string") {
         return false;
@@ -11,57 +20,44 @@ function isCurrentOrDescendantPage(pageUrl, navigationUrl) {
     return pageUrl === navigationUrl || pageUrl.startsWith(`${navigationUrl}/`);
 }
 
+// Does pageUrl match this item or any item nested beneath it?
+function subtreeContainsPage(item, pageUrl) {
+    if (!pageUrl) {
+        return false;
+    }
+    if (item.url === pageUrl) {
+        return true;
+    }
+    return (item.children || []).some((child) => subtreeContainsPage(child, pageUrl));
+}
+
+function mapNavigationItem(item, pageUrl, sort) {
+    const isCurrentPage = Boolean(pageUrl && item.url === pageUrl);
+    const containsPage = (item.children || []).some((child) =>
+        subtreeContainsPage(child, pageUrl)
+    );
+    const isCurrentSection =
+        isCurrentPage || containsPage || isCurrentOrDescendantPage(pageUrl, item.url);
+
+    return {
+        current: isCurrentPage,
+        // `parent` drives whether the template expands this item's children.
+        parent: isCurrentSection,
+        hasChildren: Boolean(item.children && item.children.length > 0),
+        href: item.url,
+        text: smart(item.title),
+        theme: item.data?.theme,
+        children: item.children
+            ? sortCollection(item.children, sort).map((child) =>
+                mapNavigationItem(child, pageUrl, sort)
+            )
+            : false,
+    };
+}
+
 function itemsFromNavigationFixed(eleventyNavigation, pageUrl = false, sort = false) {
-    const navigationItems = [];
     const navigationData = sortCollection(eleventyNavigation, sort);
-
-    navigationData.forEach((item) => {
-        const isCurrentPage = pageUrl && item.url === pageUrl;
-        const isChildPage = pageUrl && item.children?.some((child) => child.url === pageUrl);
-        const isGrandchildPage = pageUrl && item.children?.some((child) =>
-            child.children?.some((grandchild) => grandchild.url === pageUrl)
-        );
-        const isCurrentSection = isCurrentPage || isChildPage || isGrandchildPage ||
-            isCurrentOrDescendantPage(pageUrl, item.url);
-
-        const navigationItem = {
-            current: isCurrentPage,
-            parent: isCurrentSection,
-            hasChildren: item.children && item.children.length > 0,
-            href: item.url,
-            text: smart(item.title),
-            theme: item.data?.theme,
-            children: item.children
-                ? sortCollection(item.children, sort).map((child) => {
-                    const isChildCurrent = pageUrl && child.url === pageUrl;
-                    const isChildParent = child.children?.some((gc) => gc.url === pageUrl) ||
-                        isCurrentOrDescendantPage(pageUrl, child.url);
-                    return {
-                        current: isChildCurrent,
-                        parent: isChildParent || isChildCurrent,
-                        hasChildren: child.children && child.children.length > 0,
-                        href: child.url,
-                        text: smart(child.title),
-                        children: child.children
-                            ? sortCollection(child.children, sort).map((grandchild) => ({
-                                current: pageUrl && grandchild.url === pageUrl,
-                                href: grandchild.url,
-                                text: smart(grandchild.title)
-                            }))
-                            : false
-                    };
-                })
-                : false
-        };
-
-        if (!isCurrentPage) {
-            navigationItem.href = item.url;
-        }
-
-        navigationItems.push(navigationItem);
-    });
-
-    return navigationItems;
+    return navigationData.map((item) => mapNavigationItem(item, pageUrl, sort));
 }
 
 export default function eleventyConfigSetup(eleventyConfig) {
@@ -95,6 +91,7 @@ export default function eleventyConfigSetup(eleventyConfig) {
 
     eleventyConfig.addPassthroughCopy({ "assets/logos": "assets/logos"});
     eleventyConfig.addPassthroughCopy({ "assets/images": "assets/images"});
+    eleventyConfig.addPassthroughCopy({ "assets/scripts": "assets/scripts"});
 
     // Set dir config BEFORE adding the plugin so getLayoutTemplates can detect user layout overrides
     eleventyConfig.dir = {
@@ -105,6 +102,11 @@ export default function eleventyConfigSetup(eleventyConfig) {
     const xgovukPluginOptions = {
         // Home Office branding
         stylesheets: ['/styles/base.css'],
+        // Load the plugin's own application.js (defines the <app-search> search
+        // component) AND the Mermaid renderer. NOTE: setting `scripts` disables
+        // the plugin's built-in application.js generation, so we regenerate it
+        // ourselves in the eleventy.after hook below (see generateApplicationJs).
+        scripts: ['/assets/application.js', '/assets/scripts/mermaid-init.js'],
         templates: {
             searchIndex: {
                 permalink: '/search.json'
@@ -146,6 +148,29 @@ export default function eleventyConfigSetup(eleventyConfig) {
 
     eleventyConfig.addPlugin((cfg) => {
         cfg.addFilter('itemsFromNavigation', itemsFromNavigationFixed);
+    });
+
+    // Because we set `scripts` above (to add the Mermaid renderer), the plugin
+    // skips generating its own application.js — the file that registers the
+    // <app-search> search component. Regenerate it here so search still works.
+    eleventyConfig.on('eleventy.after', async ({ dir }) => {
+        const outputDir = dir?.output || '_site';
+        const pluginSrc = path.join(
+            'node_modules', '@x-govuk', 'govuk-eleventy-plugin', 'src', 'application.js'
+        );
+        try {
+            const bundle = await rollup({
+                input: pluginSrc,
+                context: 'window',
+                plugins: [nodeResolve(), commonJs(), terser({ format: { comments: false } })],
+            });
+            const { output } = await bundle.generate({ format: 'es' });
+            await bundle.close();
+            await fs.mkdir(path.join(outputDir, 'assets'), { recursive: true });
+            await fs.writeFile(path.join(outputDir, 'assets', 'application.js'), output[0].code);
+        } catch (error) {
+            console.error('Failed to generate application.js:', error);
+        }
     });
 
     return {
