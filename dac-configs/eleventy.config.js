@@ -1,9 +1,12 @@
 import { govukEleventyPlugin } from "@x-govuk/govuk-eleventy-plugin";
 import { sortCollection, smart } from "@x-govuk/govuk-eleventy-plugin/filters";
 
-// Override the default plugins behaviour when showing sub pages in the nav bar
-// Supports 3-level nesting (parent > child > grandchild)
-// Adds hasChildren flag for CSS indicators on collapsed items
+// Override the default plugin behaviour when showing sub pages in the nav bar.
+// Recursive version: supports arbitrary nesting depth (section > child >
+// grandchild > great-grandchild > ...) so the sidebar renders the full tree.
+// Each item carries `current` (is this the page), `parent` (is the current page
+// this item or a descendant — i.e. expand its children) and `hasChildren`.
+// Paired with the recursing sub-navigation macro in _includes.
 function isCurrentOrDescendantPage(pageUrl, navigationUrl) {
     if (typeof pageUrl !== "string") {
         return false;
@@ -11,57 +14,44 @@ function isCurrentOrDescendantPage(pageUrl, navigationUrl) {
     return pageUrl === navigationUrl || pageUrl.startsWith(`${navigationUrl}/`);
 }
 
+// Does pageUrl match this item or any item nested beneath it?
+function subtreeContainsPage(item, pageUrl) {
+    if (!pageUrl) {
+        return false;
+    }
+    if (item.url === pageUrl) {
+        return true;
+    }
+    return (item.children || []).some((child) => subtreeContainsPage(child, pageUrl));
+}
+
+function mapNavigationItem(item, pageUrl, sort) {
+    const isCurrentPage = Boolean(pageUrl && item.url === pageUrl);
+    const containsPage = (item.children || []).some((child) =>
+        subtreeContainsPage(child, pageUrl)
+    );
+    const isCurrentSection =
+        isCurrentPage || containsPage || isCurrentOrDescendantPage(pageUrl, item.url);
+
+    return {
+        current: isCurrentPage,
+        // `parent` drives whether the template expands this item's children.
+        parent: isCurrentSection,
+        hasChildren: Boolean(item.children && item.children.length > 0),
+        href: item.url,
+        text: smart(item.title),
+        theme: item.data?.theme,
+        children: item.children
+            ? sortCollection(item.children, sort).map((child) =>
+                mapNavigationItem(child, pageUrl, sort)
+            )
+            : false,
+    };
+}
+
 function itemsFromNavigationFixed(eleventyNavigation, pageUrl = false, sort = false) {
-    const navigationItems = [];
     const navigationData = sortCollection(eleventyNavigation, sort);
-
-    navigationData.forEach((item) => {
-        const isCurrentPage = pageUrl && item.url === pageUrl;
-        const isChildPage = pageUrl && item.children?.some((child) => child.url === pageUrl);
-        const isGrandchildPage = pageUrl && item.children?.some((child) =>
-            child.children?.some((grandchild) => grandchild.url === pageUrl)
-        );
-        const isCurrentSection = isCurrentPage || isChildPage || isGrandchildPage ||
-            isCurrentOrDescendantPage(pageUrl, item.url);
-
-        const navigationItem = {
-            current: isCurrentPage,
-            parent: isCurrentSection,
-            hasChildren: item.children && item.children.length > 0,
-            href: item.url,
-            text: smart(item.title),
-            theme: item.data?.theme,
-            children: item.children
-                ? sortCollection(item.children, sort).map((child) => {
-                    const isChildCurrent = pageUrl && child.url === pageUrl;
-                    const isChildParent = child.children?.some((gc) => gc.url === pageUrl) ||
-                        isCurrentOrDescendantPage(pageUrl, child.url);
-                    return {
-                        current: isChildCurrent,
-                        parent: isChildParent || isChildCurrent,
-                        hasChildren: child.children && child.children.length > 0,
-                        href: child.url,
-                        text: smart(child.title),
-                        children: child.children
-                            ? sortCollection(child.children, sort).map((grandchild) => ({
-                                current: pageUrl && grandchild.url === pageUrl,
-                                href: grandchild.url,
-                                text: smart(grandchild.title)
-                            }))
-                            : false
-                    };
-                })
-                : false
-        };
-
-        if (!isCurrentPage) {
-            navigationItem.href = item.url;
-        }
-
-        navigationItems.push(navigationItem);
-    });
-
-    return navigationItems;
+    return navigationData.map((item) => mapNavigationItem(item, pageUrl, sort));
 }
 
 export default function eleventyConfigSetup(eleventyConfig) {

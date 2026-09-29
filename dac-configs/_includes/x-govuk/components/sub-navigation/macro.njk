@@ -1,0 +1,43 @@
+{#-
+  Recursing override of the x-govuk sub-navigation macro.
+
+  The stock macro (in @x-govuk/govuk-prototype-components) renders only two
+  levels. The itemsFromNavigation filter in eleventy.config.js builds the tree
+  deeper (section > child > grandchild), so this override renders it
+  recursively — letting the sidebar show the full depth, e.g.
+  Architecture Assurance > Templates > Architecture Decision Record (ADR).
+
+  docs/_includes takes precedence over the plugin's template search path, so
+  this file shadows the stock macro for every site built with dac-configs.
+-#}
+{% from "govuk/macros/attributes.njk" import govukAttributes -%}
+
+{% macro _subNavList(items, level) %}
+  <ul class="x-govuk-sub-navigation__section{% if level > 0 %} x-govuk-sub-navigation__section--nested{% endif %}">
+  {% for item in items %}
+    {% if item %}
+    <li class="x-govuk-sub-navigation__section-item{% if item.current %} x-govuk-sub-navigation__section-item--current{% endif %}">
+      <a class="x-govuk-sub-navigation__link" href="{{ item.href }}"{% if item.current %} aria-current="true"{% endif %}>
+        {{- item.text -}}
+      </a>
+      {% if item.parent and item.children | length > 0 %}
+        {{ _subNavList(item.children, level + 1) }}
+      {% endif %}
+    </li>
+    {% endif %}
+  {% endfor %}
+  </ul>
+{% endmacro %}
+
+{% macro xGovukSubNavigation(params) %}
+  <nav class="x-govuk-sub-navigation{%- if params.classes %} {{ params.classes }}{% endif %}" aria-labelledby="sub-navigation-heading"
+    {{- govukAttributes(params.attributes) }}>
+    <h2 class="govuk-visually-hidden" id="sub-navigation-heading">{{ params.visuallyHiddenTitle or "Pages in this section" }}</h2>
+  {% for theme, items in params.items | groupby("theme") %}
+    {% if theme != "undefined" %}
+    <h3 class="x-govuk-sub-navigation__theme">{{ theme }}</h3>
+    {% endif %}
+    {{ _subNavList(items, 0) }}
+  {% endfor %}
+  </nav>
+{% endmacro %}
