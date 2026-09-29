@@ -130,3 +130,13 @@ p.govuk-body, .govuk-list li {
   border: 1px solid #b1b4b6; // govuk mid-grey
   border-radius: 4px;
 }
+
+// Remove the purple current-page indicator line on the left of the active
+// sidebar item, and neutralise the negative margin/padding that positioned it,
+// so the active item aligns with the others.
+.x-govuk-sub-navigation__section-item--current {
+  border-left: 0;
+  margin-left: 0;
+  padding-left: 0;
+  background-color: transparent;
+}
