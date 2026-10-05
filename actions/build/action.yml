@@ -32,6 +32,12 @@ inputs:
     type: string
     default: ""
 
+  markdown_breaks:
+    description: "Render a single newline in a paragraph as a <br> (default: false, the CommonMark default)"
+    required: false
+    type: string
+    default: "false"
+
 runs:
   using: "composite"
 
@@ -49,6 +55,7 @@ runs:
         REPO_NAME: ${{ inputs.repo_name }}
         REPO_OWNER: ${{ inputs.repo_owner }}
         PRODUCT_NAME: ${{ inputs.product_name }}
+        MARKDOWN_BREAKS: ${{ inputs.markdown_breaks }}
       with:
         working_directory: ${{ inputs.working_directory }}
 

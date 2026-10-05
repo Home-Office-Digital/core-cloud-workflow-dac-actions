@@ -71,6 +71,10 @@ export default function eleventyConfigSetup(eleventyConfig) {
     const repoName = process.env.REPO_NAME || githubRepositoryName || process.env.npm_package_name || '';
     const productName = process.env.PRODUCT_NAME || repoName || 'Documentation';
 
+    // whether to turn \n into <br> inside paragraphs
+    // mainly useful if your site has postal addresses or poems
+    const markdownBreaks = process.env.MARKDOWN_BREAKS === 'true';
+
     /** This should match the public site URL when the docs are deployed.
       * For example when using a GitHub action to deploy to GitHub pages:
       * 
@@ -105,6 +109,9 @@ export default function eleventyConfigSetup(eleventyConfig) {
     const xgovukPluginOptions = {
         // Home Office branding
         stylesheets: ['/styles/base.css'],
+        markdown: {
+            breaks: markdownBreaks,
+        },
         templates: {
             searchIndex: {
                 permalink: '/search.json'

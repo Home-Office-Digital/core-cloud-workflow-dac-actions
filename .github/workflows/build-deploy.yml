@@ -33,6 +33,11 @@ on:
         required: false
         type: string
         default: ""
+      markdown_breaks:
+        description: "Render a single newline in a paragraph as a <br> (default: false, the CommonMark default)"
+        required: false
+        type: string
+        default: "false"
 
 permissions:
   contents: read
@@ -64,6 +69,7 @@ jobs:
           repo_name: ${{ inputs.repo_name }}
           repo_owner: ${{ inputs.repo_owner }}
           product_name: ${{ inputs.product_name }}
+          markdown_breaks: ${{ inputs.markdown_breaks }}
 
   deploy:
     needs: build
