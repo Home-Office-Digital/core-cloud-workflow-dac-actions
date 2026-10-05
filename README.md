@@ -51,6 +51,11 @@ The reusable workflow supports the following inputs:
   - Required: false
   - Default: derived from repository metadata when available, otherwise Documentation
   - Description: Product name shown in the site header
+- markdown_breaks
+  - Type: string
+  - Required: false
+  - Default: "false"
+  - Description: Whether to convert new-lines into `<br>` when rendering paragraphs.
 
 The DAC Eleventy config derives repository details from `GITHUB_REPOSITORY` by default and derives `product_name` from repository metadata when not explicitly set, falling back to `Documentation`. Set `repo_name`, `repo_owner`, or `product_name` only when the generated links, header title, or GitHub Pages paths need to point somewhere other than the calling repository defaults.
 
